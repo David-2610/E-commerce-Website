@@ -1,13 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router";
 
 const New_arival = () => {
 	const scrollRef = useRef(null);
-	// const [isDraging, setDragging] = useState(false);
-	// const [startX, setStartX] = useState(false);
-	// const [scrollLeft, setScrollLeft] = useState(false);
-	// const [canscrollright, setCanscrollright] = useState(true);
+	const [isDragging, setDragging] = useState(false);
+	const [startX, setStartX] = useState(0);
+	const [scrollLeft, setScrollLeft] = useState(false);
+	const [canscrollright, setCanscrollright] = useState(true);
+	const [canscrollleft, setCanscrollleft] = useState(false);
 
 	const newArivals = [
 		{
@@ -77,24 +78,69 @@ const New_arival = () => {
 			],
 		},
 	];
-    const UpdateScrollButton = () => {
-        const container = scrollRef.current;
-        console.log({
-            scrollLeft: container.scrollLeft,
-            clientWidth: container.clientWidth,
-            scrollWidth: container.scrollWidth,
+	const handlemouseDown = (e) => {
+		setDragging(true);
+		setStartX(e.pageX - scrollRef.current.offsetLeft);
+		setScrollLeft(scrollRef.current.scrollLeft);
+	};
+	const handleMouseMove = (e) => {
+		if (!isDragging) return;
+		e.preventDefault();
+		const x = e.pageX - scrollRef.current.offsetLeft;
+		const walk = x - startX; //scroll-fast
+		scrollRef.current.scrollLeft = scrollLeft - walk;
+	};
+	const handleMouseUporLeave = () => {
+		setDragging(false);
+	};
+
+	const scroll = (direction) => {
+		const scrollamount = direction === "left" ? -300 : 300;
+		scrollRef.current.scrollBy({ left: scrollamount, behavior: "smooth" });
+	};
+	const UpdateScrollButton = () => {
+		const container = scrollRef.current;
+		if (container) {
+			const leftscroll = container.scrollLeft;
+			const rightscrollable =
+				container.scrollLeft + container.clientWidth <
+				container.scrollWidth;
+
+			setCanscrollleft(leftscroll > 0);
+			setCanscrollright(rightscrollable);
+		}
+	};
+	useEffect(() => {
+		const container = scrollRef.current;
+		if (container) {
+			container.addEventListener("scroll", UpdateScrollButton);
+			UpdateScrollButton();
+			return () =>
+				container.removeEventListener("scroll", UpdateScrollButton);
+		}
+	}, []);
+useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const handleWheelScroll = (event) => {
+        event.preventDefault(); // Prevent default vertical scroll
+        container.scrollBy({
+            left: event.deltaY * 1.5,  // Adjust speed (increase multiplier for faster scroll)
+            behavior: "smooth",  // Add smooth scrolling behavior
         });
-        
-    }
-    useEffect(() => {
-        const conatiner = scrollRef.current;
-        if(conatiner){
-            conatiner.addEventListener("scroll",UpdateScrollButton);
-            UpdateScrollButton()
-        }
-    })
+    };
+
+    container.addEventListener("wheel", handleWheelScroll, { passive: false });
+
+    return () => {
+        container.removeEventListener("wheel", handleWheelScroll);
+    };
+}, []);
+
+
 	return (
-		<section>
+		<section className="py-16 px-4 lg:px-0">
 			<div className="container mx-auto text-center mb-10 relative  ">
 				<h2 className="text-3xl font-bold mb-4  ">
 					Explore New Arivals{" "}
@@ -104,17 +150,39 @@ const New_arival = () => {
 					added to keep your wardrobe on the cutting edge of fashion.
 				</p>
 				<div className="absolute right-0 bottom-[-30px] flex space-x-2  ">
-					<button className="p-2 rounded border  border-gray-200 bg-white text-black ">
+					<button
+						onClick={() => scroll("left")}
+						disabled={!canscrollleft}
+						className={`p-2 rounded border  border-gray-200 bg-white text-black ${
+							canscrollleft
+								? "bg-white text-black"
+								: "bg-gray-200 text-gray-400 cursor-not-allowed"
+						}`}
+					>
 						<FiChevronLeft className="text-2xl" />
 					</button>
-					<button className="p-2 rounded border border-gray-200 bg-white text-black ">
+					<button
+						onClick={() => scroll("Right")}
+						disabled={!canscrollright}
+						className={`p-2 rounded border  border-gray-200 bg-white text-black ${
+							canscrollright
+								? "bg-white text-black"
+								: "bg-gray-200 text-gray-400 cursor-not-allowed"
+						}`}
+					>
 						<FiChevronRight className="text-2xl" />
 					</button>
 				</div>
 			</div>
 			<div
 				ref={scrollRef}
-				className="container mx-auto overflow-x-scroll flex space-x-6 relative "
+				className={`container mx-auto overflow-x-scroll  flex space-x-6 relative scrollbar-hide ${
+					isDragging ? "cursor-grabbing" : "cursor-grab"
+				}  `}
+				onMouseDown={handlemouseDown}
+				onMouseUp={handleMouseUporLeave}
+				onMouseMove={handleMouseMove}
+				onMouseLeave={handleMouseUporLeave}
 			>
 				{newArivals.map((product) => (
 					<div
@@ -124,11 +192,12 @@ const New_arival = () => {
 						<img
 							src={product.images[0]?.url}
 							alt={product.images[0].altText || product.name}
-							className="w-full h-[500px] object-cover rounded-lg"
+							className="w-full h-[400px] object-cover rounded-lg"
+							draggable="false"
 						/>
 						<div className="absolute bottom-0 left-0 right-0 backdrop-blur-md text-white p-4 rounded-b-lg ">
 							<Link
-								to={"/product/${product._id}"}
+								to={`/product/${product._id}`}
 								className="block"
 							>
 								<h4 className="font-medium">{product.name}</h4>
@@ -141,9 +210,5 @@ const New_arival = () => {
 		</section>
 	);
 };
-
-
-
-
 
 export default New_arival;

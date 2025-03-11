@@ -3,7 +3,7 @@ import menscollimage from "../../assets/mens-collection.webp";
 import womencollimage from "../../assets/womens-collection.webp";
 const Gendercoll = () => {
 	return (
-		<section className="py-16 px-4 md:px-0">
+		<section className="py-16 mx-4 md:px-0">
 			<div className="container mx-auto flex flex-col md:flex-row gap-8">
                 {/* {Mens} */}
 				<div className="relative flex-1">
@@ -14,7 +14,7 @@ const Gendercoll = () => {
 					/>
 					<div className="absolute bottom-8 left-8 bg-white/50 p-4 rounded-2xl ">
 						<h2 className=" text-2xl font-bold mb-3 text-gray-900">
-							Mens's Collection
+							Men's Collection
 						</h2>
 						<Link
 							to="/collections/all?gender=mens"
