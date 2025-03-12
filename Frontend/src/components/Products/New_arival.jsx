@@ -119,25 +119,26 @@ const New_arival = () => {
 				container.removeEventListener("scroll", UpdateScrollButton);
 		}
 	}, []);
-useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    const handleWheelScroll = (event) => {
-        event.preventDefault(); // Prevent default vertical scroll
-        container.scrollBy({
-            left: event.deltaY * 1.5,  // Adjust speed (increase multiplier for faster scroll)
-            behavior: "smooth",  // Add smooth scrolling behavior
-        });
-    };
-
-    container.addEventListener("wheel", handleWheelScroll, { passive: false });
-
-    return () => {
-        container.removeEventListener("wheel", handleWheelScroll);
-    };
-}, []);
-
+	useEffect(() => {
+		const container = scrollRef.current;
+		if (!container) return;
+	
+		const handleWheelScroll = (event) => {
+			if (event.deltaY === 0) return; // Ignore horizontal scrolling
+			event.preventDefault();
+			container.scrollBy({
+				left: event.deltaY * 1, // Keep it 1x to match trackpad feel
+				behavior: "smooth",
+			});
+		};
+	
+		container.addEventListener("wheel", handleWheelScroll, { passive: false });
+	
+		return () => {
+			container.removeEventListener("wheel", handleWheelScroll);
+		};
+	}, []);
+	
 
 	return (
 		<section className="py-16 px-4 lg:px-0">
@@ -162,7 +163,7 @@ useEffect(() => {
 						<FiChevronLeft className="text-2xl" />
 					</button>
 					<button
-						onClick={() => scroll("Right")}
+						onClick={() => scroll("right")}
 						disabled={!canscrollright}
 						className={`p-2 rounded border  border-gray-200 bg-white text-black ${
 							canscrollright

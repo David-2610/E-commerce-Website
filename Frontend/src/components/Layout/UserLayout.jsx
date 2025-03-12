@@ -1,19 +1,19 @@
-import { Outlet } from "react-router"
-import Footer from "../Common/Footer"
-import Header from "../Common/Header"
+import { Outlet } from "react-router";
+import Footer from "../Common/Footer";
+import Header from "../Common/Header";
 
 const UserLayout = () => {
-  return (
-    <>
-<Header/>
+	return (
+		<>
+			<Header />
 
-<main>
-  <Outlet/>
-</main>
+			<main>
+				<Outlet />
+			</main>
 
-<Footer/>
-    </>
-  )
-}
+			<Footer />
+		</>
+	);
+};
 
-export default UserLayout
+export default UserLayout;
