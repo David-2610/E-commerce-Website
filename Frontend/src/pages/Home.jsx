@@ -1,9 +1,10 @@
 import Hero from "../components/Layout/Hero";
+import FeaturedCollection from "../components/Products/FeaturedCollection";
+import Featuresection from "../components/Products/Featuresection";
 import Gendercoll from "../components/Products/Gendercoll";
 import New_arival from "../components/Products/New_arival";
 import Productdetail from "../components/Products/productdetail";
 import ProductGrid from "../components/Products/productgrid";
-
 const placeholoderproducts = [
 	{
 		_id: 1,
@@ -94,7 +95,6 @@ const placeholoderproducts = [
 		],
 	},
 ];
-
 const Home = () => {
 	return (
 		<div>
@@ -111,6 +111,8 @@ const Home = () => {
 					Top Wear For Womens
 				</h2>
 				<ProductGrid Products={placeholoderproducts} />
+				<FeaturedCollection/>
+				<Featuresection/>
 			</div>
 		</div>
 	);

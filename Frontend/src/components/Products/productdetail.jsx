@@ -104,9 +104,9 @@ const similarproducts = [
 ];
 
 const Productdetails = () => {
-	const [mainimage, setMainimage] = useState("T");
-	const [selectedsize, setSelectedsize] = useState("T");
-	const [selectedcolor, setSelectedcolor] = useState("T");
+	const [mainimage, setMainimage] = useState();
+	const [selectedsize, setSelectedsize] = useState();
+	const [selectedcolor, setSelectedcolor] = useState();
 	const [quantity, setQuantity] = useState(1);
 	const [isbuttondisabled, setIsbuttondisabled] = useState(false);
 
@@ -258,6 +258,7 @@ const Productdetails = () => {
 								</button>
 							</div>
 						</div>
+						
 						<button
 							onClick={handleAddToCart}
 							disabled={isbuttondisabled}
