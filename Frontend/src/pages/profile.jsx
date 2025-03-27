@@ -13,7 +13,11 @@ const profile = () => {
 						<p className="text-lg text-gray-600 mb-4">
 							davidtembhare1005@gmail.com
 						</p>
-						<button className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+						<button
+						onClick={() => {
+							window.location.href = "/login";
+						}
+						} className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
 							Logout
 						</button>
 					</div>

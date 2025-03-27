@@ -21,12 +21,14 @@ const CollectionPage = () => {
 	useEffect(() => {
 		document.addEventListener("mousedown", handleClickOutside);
 
-		document.removeEventListener("mousedown", handleClickOutside);
-	});
+		return () => {
+		    document.removeEventListener("mousedown", handleClickOutside);
+		}
+	},[]);
 
 	useEffect(() => {
 		// Fetch products from the backend
-		setTimeout(() => {
+		setTimeout(() => { 
 			const fetchProducts = [
 				{
 					_id: 1,
