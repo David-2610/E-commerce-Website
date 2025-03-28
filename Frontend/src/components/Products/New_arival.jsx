@@ -25,7 +25,7 @@ const New_arival = () => {
 		{
 			_id: 2,
 			name: "Stylish jacket",
-			price: 0,
+			price: 160,
 			images: [
 				{
 					url: "https://picsum.photos/500/500?/random?image=2",
@@ -36,7 +36,7 @@ const New_arival = () => {
 		{
 			_id: 3,
 			name: "Stylish jacket",
-			price: 0,
+			price: 660,
 			images: [
 				{
 					url: "https://picsum.photos/500/500?/random?image=3",
@@ -47,7 +47,7 @@ const New_arival = () => {
 		{
 			_id: 4,
 			name: "Stylish jacket",
-			price: 0,
+			price: 460,
 			images: [
 				{
 					url: "https://picsum.photos/500/500?/random?image=4",
@@ -58,7 +58,7 @@ const New_arival = () => {
 		{
 			_id: 5,
 			name: "Stylish jacket",
-			price: 0,
+			price: 4560,
 			images: [
 				{
 					url: "https://picsum.photos/500/500?/random?image=5",
@@ -69,7 +69,7 @@ const New_arival = () => {
 		{
 			_id: 6,
 			name: "Stylish jacket",
-			price: 0,
+			price: 5860,
 			images: [
 				{
 					url: "https://picsum.photos/500/500?/random?image=6",

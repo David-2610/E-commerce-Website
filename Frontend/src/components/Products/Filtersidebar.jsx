@@ -29,11 +29,6 @@ const Filtersidebar = () => {
 		"Brown",
 		"Orange",
 		"Purple",
-		"Navy Blue",
-		"Beige",
-		"Gold",
-		"Silver",
-		"Multi Color",
 	];
 
 	const sizes = ["S", "M", "L", "XL", "XXL"];
@@ -62,20 +57,23 @@ const Filtersidebar = () => {
 	const handlefilterchange = (e) => {
 		const { name, value, type, checked } = e.target;
 		let newFilters = { ...Filters };
+
 		if (type === "checkbox") {
 			if (checked) {
-				newFilters[name] = [...(newFilters[name] || []), value];
+				newFilters[name] = [...(newFilters[name] || []), value]; // Add new value
 			} else {
 				newFilters[name] = newFilters[name].filter(
 					(item) => item !== value
-				);
+				); // Remove value
 			}
 		} else {
 			newFilters[name] = value;
 		}
+
 		setFilters(newFilters);
 		updateURLParams(newFilters);
 	};
+
 	const handlepricerangechange = (e) => {
 		const newPrice = e.target.value;
 		setPricerange([0, newPrice]);
@@ -86,13 +84,15 @@ const Filtersidebar = () => {
 
 	const updateURLParams = (newFilters) => {
 		const params = new URLSearchParams();
-		Object.keys(Filters).forEach((key) => {
+
+		Object.keys(newFilters).forEach((key) => {
 			if (Array.isArray(newFilters[key]) && newFilters[key].length > 0) {
-				params.append(key, newFilters[key].join(","));
-			} else {
-				params.append(key, newFilters[key]);
+				params.set(key, newFilters[key].join(",")); // Convert array to comma-separated string
+			} else if (newFilters[key]) {
+				params.set(key, newFilters[key]);
 			}
 		});
+
 		setSearchParams(params);
 		navigate(`?${params.toString()}`);
 	};
@@ -103,7 +103,7 @@ const Filtersidebar = () => {
 		setFilters({
 			category: params.category || "",
 			gender: params.gender || "",
-			color: params.color || "",
+			color: params.color ? params.color.split(",") : [],
 			size: params.size ? params.size.split(",") : [],
 			material: params.material ? params.material.split(",") : [],
 			brand: params.brand ? params.brand.split(",") : [],
@@ -121,7 +121,7 @@ const Filtersidebar = () => {
 					Category
 				</label>
 				{categories.map((category) => (
-					<div key={category} className="flex items-center mb-1">
+					<label key={category} className="flex items-center mb-1">
 						<input
 							type="radio"
 							name="category"
@@ -131,7 +131,7 @@ const Filtersidebar = () => {
 							className="mr-2 h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300"
 						/>
 						<span className="text-gray-700">{category}</span>
-					</div>
+					</label>
 				))}
 			</div>
 			{/* Gender Filter */}
@@ -140,7 +140,7 @@ const Filtersidebar = () => {
 					Gender
 				</label>
 				{genders.map((gender) => (
-					<div key={gender} className="flex items-center mb-1">
+					<label key={gender} className="flex items-center mb-1">
 						<input
 							type="radio"
 							name="gender"
@@ -150,7 +150,7 @@ const Filtersidebar = () => {
 							className="mr-2 h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300"
 						/>
 						<span className="text-gray-700">{gender}</span>
-					</div>
+					</label>
 				))}
 			</div>
 			{/* Color Filter */}
@@ -160,27 +160,32 @@ const Filtersidebar = () => {
 				</label>
 				<div className="flex flex-wrap gap-2">
 					{colours.map((color) => (
-						<button
-							key={color}
-							name="colour"
-							value={color}
-							onClick={handlefilterchange}
-							className={`w-8 h-8 rounded-full border border-gray-300 cursor-pointer transition hover: scale-105 ${
-								Filters.color.includes(color.toLowerCase())
-									? "ring-2 border-blue-500"
-									: ""
-							}`}
-							style={{
-								backgroundColor: color.toLowerCase(),
-							}}
-						></button>
+						<label key={color} className="cursor-pointer">
+							<input
+								type="checkbox"
+								name="color"
+								value={color}
+								onChange={handlefilterchange}
+								checked={Filters.color.includes(color)}
+								className="hidden"
+							/>
+							<span
+								className={`w-8 h-8 rounded-full border border-gray-300 transition hover:scale-105 flex items-center justify-center ${
+									Filters.color.includes(color)
+										? "ring-2 border-blue-500"
+										: ""
+								}`}
+								style={{ backgroundColor: color.toLowerCase() }}
+							></span>
+						</label>
 					))}
 				</div>
 			</div>
+
 			{/* size filter */}
 			<label className="block text-gray-600 font-medium mb-2">Size</label>
 			{sizes.map((size) => (
-				<div key={size} className="flex items-center mb-1 ">
+				<label key={size} className="flex items-center mb-1 ">
 					<input
 						type="checkbox"
 						name="size"
@@ -190,14 +195,14 @@ const Filtersidebar = () => {
 						className="mr-2 h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300"
 					/>
 					<span className="text-gray-700">{size}</span>
-				</div>
+				</label>
 			))}
 			{/* material filter */}
 			<label className="block text-gray-600 font-medium mb-2">
 				Material
 			</label>
 			{materials.map((material) => (
-				<div key={material} className="flex items-center mb-1">
+				<label key={material} className="flex items-center mb-1">
 					<input
 						type="checkbox"
 						name="material"
@@ -207,14 +212,14 @@ const Filtersidebar = () => {
 						className="mr-2 h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300"
 					/>
 					<span className="text-gray-700">{material}</span>
-				</div>
+				</label>
 			))}
 			{/* Brand filter */}
 			<label className="block text-gray-600 font-medium mb-2">
 				Brands
 			</label>
 			{brands.map((brand) => (
-				<div key={brand} className="flex items-center mb-1">
+				<label key={brand} className="flex items-center mb-1">
 					<input
 						type="checkbox"
 						name="brand"
@@ -224,7 +229,7 @@ const Filtersidebar = () => {
 						className="mr-2 h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300"
 					/>
 					<span className="text-gray-700">{brand}</span>
-				</div>
+				</label>
 			))}
 			{/* price range flter */}
 			<div className="mb-8">
