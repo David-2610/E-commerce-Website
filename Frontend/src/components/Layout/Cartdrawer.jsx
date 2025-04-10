@@ -1,9 +1,15 @@
 import { IoMdClose } from "react-icons/io";
 import Cartcontent from "../Cart/cartconetnt";
-const Cartdrawer = ({ draweropen,togglecartDrawer}) => {
+import { useNavigate } from "react-router";
+const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
+	const handleCheckout = () => {
+		const navigate = useNavigate();
+		navigate("/checkout");
+	};
 	return (
 		<div
-			className={`fixed top-0 right-0 w-3/4 sm:w1/2 md:w-[30rem] h-full bg-white shadow-lg transform transition-transform duration-300 flex flex-col z-50 ${ draweropen ? "translate-x-0" : "translate-x-full"
+			className={`fixed top-0 right-0 w-3/4 sm:w1/2 md:w-[30rem] h-full bg-white shadow-lg transform transition-transform duration-300 flex flex-col z-50 ${
+				draweropen ? "translate-x-0" : "translate-x-full"
 			}`}
 		>
 			<div className="flex justify-end p-4">
@@ -13,14 +19,19 @@ const Cartdrawer = ({ draweropen,togglecartDrawer}) => {
 			</div>
 			<div className="flex-grow p-4 overflow-y-auto">
 				<h2 className="text-xl font-semibold  mb-4 ">Your Cart</h2>
-                <Cartcontent/>
+				<Cartcontent />
 			</div>
 
 			<div className="p-4  bg-white stick bottom-0">
-				<button className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-lg transition">
+				<button
+					onClick={handleCheckout}
+					className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-lg transition"
+				>
 					Checkout
 				</button>
-                <p className="text-sm text-gray-500 mt-2 tracking-tighter text-center">Shipping,Taxes , and discount codes calculated at Checkout</p>
+				<p className="text-sm text-gray-500 mt-2 tracking-tighter text-center">
+					Shipping,Taxes , and discount codes calculated at Checkout
+				</p>
 			</div>
 		</div>
 	);
