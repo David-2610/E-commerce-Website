@@ -39,7 +39,7 @@ const AdminSideBar = () => {
 				</NavLink>
 {/* ------------------------------------------------------- */}
 				<NavLink
-					to="/admin/users"
+					to="/admin/products"
 					className={({ isActive }) =>
 						isActive
 							? "bg-gray-700 text-white py-3 px-4  rounded  flex items-center space-x-2"
@@ -51,7 +51,7 @@ const AdminSideBar = () => {
 				</NavLink>
 {/* ------------------------------------------------------- */}
 				<NavLink
-					to="/admin/users"
+					to="/admin/Orders"
 					className={({ isActive }) =>
 						isActive
 							? "bg-gray-700 text-white py-3 px-4  rounded  flex items-center space-x-2"
@@ -63,7 +63,7 @@ const AdminSideBar = () => {
 				</NavLink>
 {/* ------------------------------------------------------- */}
 				<NavLink
-					to="/admin/users"
+					to="/"
 					className={({ isActive }) =>
 						isActive
 							? "bg-gray-700 text-white py-3 px-4  rounded  flex items-center space-x-2"
