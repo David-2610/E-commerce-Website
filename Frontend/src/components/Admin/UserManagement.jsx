@@ -32,7 +32,6 @@ const UserManagement = () => {
 			role: "Customer",
 		},
 	];
-
 	const [formdata, setFormData] = useState({
 		name: "",
 		email: "",
