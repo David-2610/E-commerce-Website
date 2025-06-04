@@ -39,12 +39,18 @@ const Checkout = {
 			color: "Green",
 		},
 	],
-	shippringAddress: {
+	shippingAddress: {
 		Address: "123 Main St",
 		City: "Springfield",
 		PostalCode: "12345",
 		Country: "USA",
 	},
+};
+
+const calculateEstimateDelivery = (createdAt) => {
+	const Orderdate = new Date(createdAt);
+	Orderdate.setDate(Orderdate.getDate() + 10); // Adding 7 days for estimated delivery
+	return Orderdate.toLocaleDateString();
 };
 
 const OrderConfirmationPage = () => {
@@ -59,15 +65,72 @@ const OrderConfirmationPage = () => {
 					<div className="mb-20 justify-between flex">
 						<div>
 							<h2 className="text-2xl font-semibold ">
+								Order ID : {Checkout._id}
 							</h2>
 							<p className="text-gray-500">
-								Order Date :{" "}
+								Order date :
 								{new Date(
 									Checkout.createdAT
 								).toLocaleDateString()}
 							</p>
 						</div>
+						<div>
+							<p className="text-emerald-700 text-sm ">
+								Estimated Delivery :
+								{calculateEstimateDelivery(Checkout.createdAT)}
+							</p>
+						</div>
 					</div>
+					<div className="mb-20 ">
+						{Checkout.checkoutItems.map((item) => (
+							<div
+								key={item.productId}
+								className="flex items-center  mb-4"
+							>
+								<img
+									src={item.productImage}
+									alt={item.productName}
+									className="w-16 h-16 object-cover rounded-md mr-4"
+								/>
+								<div>
+									<h4 className="text-mb font-semibold">
+										{item.productName}
+									</h4>
+									<p className="text-sm text-gray-500">
+										{item.size} | {item.color}
+									</p>
+								</div>
+								<div className="ml-auto text-right">
+									<p className="text-nd ">
+										{" "}
+										${item.productPrice.toLocaleString()}
+									</p>
+									<p className="text-sm text-gray-500">
+										Quantity: {item.productQuantity}
+									</p>
+								</div>
+							</div>
+						))}
+					</div>
+          <div className="grid grid-cols-2 gap-8  ">
+            <div>
+              <h4 className="text-lg font-semibold mb-2"> Payment </h4>
+              <p className="text-gray-600">PayPal</p>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-2">
+                Delivery
+              </h4>
+              <p className="text-gray-600">
+                {Checkout.shippingAddress.Address}
+              </p>
+              <p className="text-gray-600">
+                {Checkout.shippingAddress.City},{" "}
+                {Checkout.shippingAddress.PostalCode},{" "}
+                {Checkout.shippingAddress.Country}
+              </p>
+            </div>
+          </div>
 				</div>
 			)}
 		</div>

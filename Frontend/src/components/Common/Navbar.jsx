@@ -26,6 +26,7 @@ const Navbar = () => {
 						ByteWears
 					</Link>
 				</div>
+				{/* middle icons */}
 				<div className="hidden md:flex space-x-6">
 					<Link
 						to="/collections/all"
@@ -52,7 +53,9 @@ const Navbar = () => {
 						Bottom Wear
 					</Link>
 				</div>
+				{/* right icons */}
 				<div className="flex items-center space-x-4">
+					<Link to="/admin" className=" block bg-black text-white px-4 py-0.5 text-sm rounded-md hover:bg-gray-700">Admin</Link>
 					<Link to="/profile" className=" hover:text-black ">
 						<HiOutlineUser className="h-6 w-6 text-gray-700" />
 					</Link>
@@ -74,6 +77,7 @@ const Navbar = () => {
 					</button>
 				</div>
 			</nav>
+			{/* Mobile Navigation Drawer */}
 			<Cartdrawer
 				draweropen={draweropen}
 				togglecartDrawer={togglecartDrawer}

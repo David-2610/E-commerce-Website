@@ -2,8 +2,9 @@ import { IoMdClose } from "react-icons/io";
 import Cartcontent from "../Cart/cartconetnt";
 import { useNavigate } from "react-router";
 const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
-	const handleCheckout = () => {
-		const navigate = useNavigate();
+	const navigate = useNavigate();
+	const HandleCheckout = () => {
+		togglecartDrawer();
 		navigate("/checkout");
 	};
 	return (
@@ -24,7 +25,7 @@ const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
 
 			<div className="p-4  bg-white stick bottom-0">
 				<button
-					onClick={handleCheckout}
+					onClick={HandleCheckout}
 					className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-lg transition"
 				>
 					Checkout

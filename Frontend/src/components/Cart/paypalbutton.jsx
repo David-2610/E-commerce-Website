@@ -1,10 +1,10 @@
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+
 const paypalbutton = ({ amount, onSuccess, onError }) => {
 	return (
 		<PayPalScriptProvider
 			options={{
-				"client-id":
-					"Ac_dktsMwU7nrMs2J1JQy_bw573V0ydAhuzyXsgSW5E9mx7V7pAxFOWnPvW94XbcmNuViwSvvF4HZ1Wz"
+				"client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID ,
 			}}
 		>
 			<PayPalButtons
