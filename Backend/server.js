@@ -1,59 +1,47 @@
-const express = require('express');// Express framework for building web applications
-const cors = require('cors');// CORS middleware to allow cross-origin requests
-const dotenv = require('dotenv');// Load environment variables from .env file
-const connectDB = require('./Config/DB');// Connect to MongoDB database
-const UserRoutes = require('./Routes/UserRoutes');// User routes for handling user-related operations
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const connectDB = require("./Config/DB");
+const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./Routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const checkoutRoutes = require("./routes/checkoutRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const subscriberRoute = require("./routes/subscribeRoute");
+const adminRoutes = require("./routes/adminRoutes");
+const productAdminRoutes = require("./routes/productAdminRoutes");
+const adminOrderRoutes = require("./routes/adminOrderRoutes");
 
+const app = express();
+app.use(express.json());
+app.use(cors());
 
+dotenv.config();
 
-
-
-const app = express();// Create an instance of the Express application
-app.use(cors());// Enable CORS for all routes
-app.use(express.json());// Parse incoming JSON requests
-dotenv.config();// Load environment variables from .env file
-const PORT = process.env.PORT || 5000;
-
-
-
-
-
-
-// Connect to MongoDB
+const PORT = process.env.PORT || 3000;
+//  now i am going to connect to the mongo database
 connectDB();
 
+app.get("/", (req, res) => {
+  res.send("WELCOME TO RABBIT API!");
+});
+
+// i will be adding all my api routes here
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/checkout", checkoutRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api", subscriberRoute);
+app.use("/api/admin/products", productAdminRoutes);
+app.use("/api/admin/orders", adminOrderRoutes);
 
 
-
-
-
-
-
-
-
-
-
-app.get('/', (req, res) => {
-    res.send('WELCOME TO THE BACKEND SERVER');
-})
-
-
-//API ROUTES
-
-app.use('/api/users', UserRoutes);
-
-
-
-
-
-
-
-
-
-
-
+// nopw i will be adding the admin routes
+app.use("/api/admin/users", adminRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-
-})
+  console.log(`server is running on http://localhost:${PORT}`);
+});

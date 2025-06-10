@@ -4,8 +4,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
-
+    "dev": "nodemon backend/server.js",
+    "seed": "node seeder.js"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +13,14 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.1",
-    "nodemon": "^3.1.10"
+    "multer": "^2.0.1",
+    "nodemon": "^3.1.10",
+    "streamifier": "^0.1.1"
   }
 }
