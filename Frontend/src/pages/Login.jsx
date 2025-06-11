@@ -1,19 +1,49 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import login from "../assets/login.webp";
-
+import { loginUser } from "../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { mergeCart } from "../redux/slices/cartSlice";
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-    const handleSubmit = async (e) => {
-		e.preventDefault();
-        console.log(email, password);
+	const dispatch = useDispatch();
+	// Now here i am writing the code to prevent loading of the full page upon clicking the sign in or sign up button
+	const navigate = useNavigate();
+	const location = useLocation();
+	const { user, guestId, loading } = useSelector((state) => state.auth);
+	const { cart } = useSelector((state) => state.cart);
 
-	}
+	// get the redirect parameter and check if it's checkout or something
+
+	const redirect =
+		new URLSearchParams(location.search).get("redirect") || "/";
+	const isCheckoutRedirect = redirect.includes("checkout");
+
+	useEffect(() => {
+		if (user) {
+			if (cart?.products.length > 0 && guestId) {
+				dispatch(mergeCart({ guestId, user })).then(() => {
+					navigate(isCheckoutRedirect ? "/checkout" : "/");
+				});
+			} else {
+				navigate(isCheckoutRedirect ? "/checkout" : "/");
+			}
+		}
+	}, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		dispatch(loginUser({ email, password }));
+	};
 
 	return (
 		<div className=" flex ">
 			<div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-12">
-				<form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg border border-gray-300 shadow-sm ">
+				<form
+					onSubmit={handleSubmit}
+					className="w-full max-w-md bg-white p-8 rounded-lg border border-gray-300 shadow-sm "
+				>
 					<div className=" flex justify-center m-6">
 						<h2 className="text-2xl font-bold mb-4">ByteWear</h2>
 					</div>
@@ -56,9 +86,15 @@ const Login = () => {
 					</button>
 					<p className="mt-6 text-sm text-center">
 						Don't have an account?{" "}
-						<a href="/register" className="text-blue-500 ">
+						<Link
+							to={`/register?redirect=${encodeURIComponent(
+								redirect
+							)}`}
+							className="text-blue-500"
+						>
+							{" "}
 							Register
-						</a>
+						</Link>
 					</p>
 				</form>
 			</div>
