@@ -14,7 +14,7 @@ import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import OrderDetailspage from "./pages/OrderDetailspage";
 import Myorderpage from "./pages/myorderpage";
 import AdminHomePage from "./pages/AdminHomePage";
-import UserManagement from "./components/Admin/UserManagement.Jsx";
+import UserManagement from "./components/Admin/UserManagement";
 import ProductManagement from "./components/Admin/ProductManagement";
 import EditProductPage from "./components/Admin/EditProductPage";
 import OrderManagement from "./components/Admin/OrderManagement";
