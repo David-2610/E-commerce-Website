@@ -15,26 +15,30 @@ const Login = () => {
 	const { cart } = useSelector((state) => state.cart);
 
 	// get the redirect parameter and check if it's checkout or something
-
+	
 	const redirect =
 		new URLSearchParams(location.search).get("redirect") || "/";
 	const isCheckoutRedirect = redirect.includes("checkout");
 
 	useEffect(() => {
 		if (user) {
-			if (cart?.products.length > 0 && guestId) {
-				dispatch(mergeCart({ guestId, user })).then(() => {
-					navigate(isCheckoutRedirect ? "/checkout" : "/");
-				});
-			} else {
-				navigate(isCheckoutRedirect ? "/checkout" : "/");
-			}
+		  if (cart?.products.length > 0 && guestId) {
+			dispatch(mergeCart({ guestId, user })).then(() => {
+			  navigate(isCheckoutRedirect ? "/checkout" : "/", { replace: true });
+			});
+		  } else {
+			navigate(isCheckoutRedirect ? "/checkout" : "/", { replace: true });
+		  }
 		}
-	}, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
-
+	  }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
+	
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		dispatch(loginUser({ email, password }));
+		// Clear the input fields after submission
+		setEmail("");
+		setPassword("");
+		
 	};
 
 	return (
@@ -82,7 +86,7 @@ const Login = () => {
 						type="submit"
 						className="bg-black hover:bg-gray-700 text-white font-semibold p-2 rounded-lg w-full transition duration-150 "
 					>
-						Sign In
+						{loading ? "Signing you in..." : "Sign In"}
 					</button>
 					<p className="mt-6 text-sm text-center">
 						Don't have an account?{" "}
