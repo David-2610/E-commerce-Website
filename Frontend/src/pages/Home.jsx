@@ -1,3 +1,4 @@
+import react , { useState } from "react";
 import Hero from "../components/Layout/Hero";
 import FeaturedCollection from "../components/Products/FeaturedCollection";
 import Featuresection from "../components/Products/Featuresection";
@@ -5,97 +6,41 @@ import Gendercoll from "../components/Products/Gendercoll";
 import New_arival from "../components/Products/New_arival";
 import Productdetail from "../components/Products/productdetail";
 import ProductGrid from "../components/Products/productgrid";
-const placeholoderproducts = [
-	{
-		_id: 1,
-		name: "product1",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=1",
-				alt: "product image 1",
-			},
-		],
-	},
-	{
-		_id: 2,
-		name: "product2",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=2",
-				alt: "product image 2",
-			},
-		],
-	},
-	{
-		_id: 3,
-		name: "product3",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=3",
-				alt: "product image 3",
-			},
-		],
-	},
-	{
-		_id: 4,
-		name: "product4",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=4",
-				alt: "product image 4",
-			},
-		],
-	},
-	{
-		_id: 5,
-		name: "product5",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=5",
-				alt: "product image 5",
-			},
-		],
-	},
-	{
-		_id: 6,
-		name: "product6",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=6",
-				alt: "product image 6",
-			},
-		],
-	},
-	{
-		_id: 7,
-		name: "product7",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=7",
-				alt: "product image 7",
-			},
-		],
-	},
-	{
-		_id: 8,
-		name: "product8",
-		price: 1000,
-		images: [
-			{
-				url: "https://picsum.photos/500/500?/random?image=8",
-				alt: "product image 8",
-			},
-		],
-	},
-];
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchProductsByFilters } from "../redux/slices/productsSlice";
+
+import axios from "axios";
+
 const Home = () => {
+	const dispatch = useDispatch();
+	const { products } = useSelector((state) => state.products);
+	const [bestSellerProduct, setBestSellerProduct] = useState(null);
+
+	useEffect(() => {
+		// fetch product for a specific collection
+		dispatch(
+			fetchProductsByFilters({
+				gender: "Women",
+				category: "Top Wear",
+				limit: 8,
+			})
+		);
+		// fetch the best seller product
+		const fetchBestSeller = async () => {
+			try {
+				const response = await axios.get(
+					`${
+						import.meta.env.VITE_BACKEND_URL
+					}/api/products/best-seller`
+				);
+				setBestSellerProduct(response.data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchBestSeller();
+	}, [dispatch]);
 	return (
 		<div>
 			<Hero />
@@ -105,17 +50,23 @@ const Home = () => {
 			<h2 className="text-3xl text-center font-bold mb-4">
 				Best Sellers
 			</h2>
-			<Productdetail />
+
+			{bestSellerProduct ? (
+				<Productdetail productId={bestSellerProduct._id} />
+			) : (
+				<p className="text-center">Loading Best Seller Products...</p>
+			)}
 			<div className="container mx-auto ">
 				<h2 className=" text-3xl text-center font-bold mb-4">
 					Top Wear For Womens
 				</h2>
-				<ProductGrid Products={placeholoderproducts} />
-				<FeaturedCollection/>
-				<Featuresection/>
+				<ProductGrid products={products} />
 			</div>
+				<FeaturedCollection />
+				<Featuresection />
 		</div>
 	);
 };
 
 export default Home;
+
