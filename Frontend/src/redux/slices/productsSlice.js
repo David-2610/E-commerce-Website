@@ -84,6 +84,7 @@ export const fetchSimilarProducts = createAsyncThunk(
     const response = await axios.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/products/similar/${id}`
     );
+
     return response.data;
   }
 );

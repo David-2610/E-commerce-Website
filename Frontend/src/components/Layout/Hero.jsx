@@ -17,7 +17,7 @@ const Hero = () => {
 						Explore our vacation ready outfits with fast woridwide shipping.
 					</p>
 					<Link
-						to="#"
+						to="/collections/all"
 						className="bg-white text-gray-950 px-6 py-2 rounded-sm text-lg"
 					>
 						Shop Now

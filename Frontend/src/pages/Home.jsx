@@ -14,7 +14,7 @@ import axios from "axios";
 
 const Home = () => {
 	const dispatch = useDispatch();
-	const { products } = useSelector((state) => state.products);
+	const { products , loading, error} = useSelector((state) => state.products);
 	const [bestSellerProduct, setBestSellerProduct] = useState(null);
 
 	useEffect(() => {
@@ -34,12 +34,13 @@ const Home = () => {
 						import.meta.env.VITE_BACKEND_URL
 					}/api/products/best-seller`
 				);
-				setBestSellerProduct(response.data);
+				setBestSellerProduct(response.data[0]);
 			} catch (error) {
 				console.error(error);
 			}
-		};
+		};7
 		fetchBestSeller();
+	
 	}, [dispatch]);
 	return (
 		<div>
@@ -60,7 +61,7 @@ const Home = () => {
 				<h2 className=" text-3xl text-center font-bold mb-4">
 					Top Wear For Womens
 				</h2>
-				<ProductGrid products={products} />
+				<ProductGrid products={products} loading={loading} error={error} />
 			</div>
 				<FeaturedCollection />
 				<Featuresection />
