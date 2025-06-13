@@ -4,26 +4,30 @@ const User = require("../Models/User");
 
 const protect = async (req, res, next) => {
   let token;
-
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      // Decode the token to get the user id
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // Find the user by id and attach it to the request object
-      req.user = await User.findById(decoded.user.id).select("-password"); // not password
+      req.user = await User.findById(decoded.user.id).select("-password");
       next();
     } catch (error) {
       console.error("Token verification failed:", error);
-      res.status(401).json({ message: "Not authorized, token failed" });
+
+      if (error.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "Token expireded" });
+      }
+
+      return res.status(401).json({ message: "Not authorized, token failed" });
     }
   } else {
-    res.status(401).json({ message: "Not authorized, no token" });
-    console.error("authorization error ");
-
+    console.error("Authorization error: No token provided");
+    return res.status(401).json({ message: "Not authorized, no token" });
   }
 };
+
 
 // middleware to protect the routes
 // this middleware will be used to protect the routes in the userRoutes.js file

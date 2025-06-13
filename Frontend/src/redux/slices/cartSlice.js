@@ -71,7 +71,7 @@ export const updateCartItemQuantity = createAsyncThunk(
           color,
         }
       );
-      console.log("Updated cart item quantity:", response.data);
+      
       return response.data;
 
     } catch (error) {
