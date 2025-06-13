@@ -8,7 +8,7 @@ const router = express.Router();
 
 const getCart = async (userId, guestId) => {
   if (userId) {
-    return await Cart.findOne({ user: userId });
+    return await Cart.findOne({ userId: userId });
   } else if (guestId) {
     return await Cart.findOne({ guestId: guestId });
   }
@@ -27,6 +27,7 @@ router.post("/", optionalAuth, async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
     let cart = await getCart(userId, guestId);
+
     if (cart) {
       const productIndex = cart.products.findIndex(
         (p) =>
@@ -55,7 +56,7 @@ router.post("/", optionalAuth, async (req, res) => {
       return res.status(200).json(cart);
     } else {
       const newCart = await Cart.create({
-        user: userId ? userId : undefined,
+        userId: userId ? userId : undefined,
         guestId: guestId ? guestId : "guest_" + new Date().getTime(),
         products: [
           {
@@ -99,6 +100,7 @@ router.put("/", async (req, res) => {
         0
       );
       await cart.save();
+  
       return res.status(200).json(cart);
     } else {
       return res.status(404).json({ message: "Product not found in cart" });
@@ -154,7 +156,7 @@ router.post("/merge", protect, async (req, res) => {
   const { guestId } = req.body;
   try {
     const guestCart = await Cart.findOne({ guestId });
-    const userCart = await Cart.findOne({ user: req.user._id });
+    const userCart = await Cart.findOne({ userId: req.user._id });
     if(guestCart) {
       if(guestCart.products.length === 0) {
         return res.status(404).json({ message: "Guest cart is empty" });
@@ -185,7 +187,7 @@ router.post("/merge", protect, async (req, res) => {
         }
         return res.status(200).json(userCart);
       } else {
-        guestCart.user = req.user._id;
+        guestCart.userId = req.user._id;
         guestCart.guestId = undefined;
         await guestCart.save();
         return res.status(200).json(guestCart);

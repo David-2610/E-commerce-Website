@@ -22,12 +22,10 @@ const Login = () => {
 
 	useEffect(() => {
 		if (user) {
-		  if (cart?.products.length > 0 && guestId) {
+		  if (guestId) {
 			dispatch(mergeCart({ guestId, user })).then(() => {
 			  navigate(isCheckoutRedirect ? "/checkout" : "/", { replace: true });
 			});
-		  } else {
-			navigate(isCheckoutRedirect ? "/checkout" : "/", { replace: true });
 		  }
 		}
 	  }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);

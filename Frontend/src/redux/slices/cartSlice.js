@@ -43,6 +43,7 @@ export const addToCart = createAsyncThunk(
         `${import.meta.env.VITE_BACKEND_URL}/api/cart`,
         { productId, quantity, size, color, guestId, userId }
       );
+    
       return response.data;
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -70,7 +71,9 @@ export const updateCartItemQuantity = createAsyncThunk(
           color,
         }
       );
+      console.log("Updated cart item quantity:", response.data);
       return response.data;
+
     } catch (error) {
       console.error("Error updating cart item quantity:", error);
       return rejectWithValue(error.response.data);
@@ -200,7 +203,7 @@ const cartSlice = createSlice({
       .addCase(mergeCart.fulfilled, (state, action) => {
         state.loading = false;
         state.cart = action.payload// Merge the products from the user cart into the guest cart
-        saveCartToStorage(state.payload); // Save the updated cart to local storage
+        saveCartToStorage(action.payload); // Save the updated cart to local storage
       })
       .addCase(mergeCart.rejected, (state, action) => {
         state.loading = false;

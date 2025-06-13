@@ -18,13 +18,13 @@ function ProductDetails({productId}) {
     const [selectedColor, setSelectedColor] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+    
 
 	useEffect(() => {
 		if (productFetchId) {
 
 			dispatch(fetchProductDetails(productFetchId));
-			dispatch(fetchSimilarProducts({ id: productFetchId })); // ✅ Check this line
+			dispatch(fetchSimilarProducts({ id: productFetchId })); 
 		}
 	}, [dispatch, productFetchId]);
 	
@@ -52,12 +52,12 @@ function ProductDetails({productId}) {
 
         dispatch(
             addToCart({
+                userId: user?.id,
                 productId:productFetchId,
                 quantity,
                 size: selectedSize,
                 color: selectedColor,
                 guestId,
-                userId: user?._id,
             })
         )
         .then(() => {

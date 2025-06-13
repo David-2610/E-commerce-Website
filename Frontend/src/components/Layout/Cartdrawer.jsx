@@ -1,12 +1,14 @@
 import { IoMdClose } from "react-icons/io";
 import Cartcontent from "../Cart/cartconetnt";
+import { fetchCart } from "../../redux/slices/cartSlice";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
 	const navigate = useNavigate();
 	const { user, guestId } = useSelector((state) => state.auth);
 	const { cart } = useSelector((state) => state.cart);
-	const userId = user ? user._id : null;
+	const userId = user ? user.id : null;
 
 	const HandleCheckout = () => {
 		togglecartDrawer();
@@ -16,6 +18,12 @@ const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
 			navigate("/checkout");
 		}
 	};
+	useEffect(() => {
+		if (userId || guestId) {
+			fetchCart({ userId, guestId });
+		}
+	}, [userId, guestId]);
+	
 	
 	return (
 		<div
