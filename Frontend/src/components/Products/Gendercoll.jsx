@@ -17,7 +17,7 @@ const Gendercoll = () => {
 							Men's Collection
 						</h2>
 						<Link
-							to="/collections/all?gender=mens"
+							to="/collections/all?gender=Men"
 							className="text-gray-900 p-1  hover:text-gray-700 hover:bg-white/60 rounded-4xl"
 						>
 							Shop Now
@@ -36,7 +36,7 @@ const Gendercoll = () => {
 							Women's Collection
 						</h2>
 						<Link
-							to="/collections/all?gender=womens"
+							to="/collections/all?gender=Women"
 							className="text-gray-900 p-1  hover:text-gray-700 hover:bg-white/60 rounded-4xl"
 						>
 							Shop Now
