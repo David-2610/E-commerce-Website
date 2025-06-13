@@ -1,6 +1,6 @@
 const express = require("express");
 const Product = require("../Models/Product");
-const {protect, admin} = require("../middleware/authMiddleware");
+const {protect, admin} = require("../middleware/authmiddleware");
 
 // @route GET /api/admin/products
 // @desc Get all products (admin only) 

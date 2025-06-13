@@ -1,7 +1,7 @@
 const express = require("express");
 const Cart = require("../Models/Cart");
 const Product = require("../Models/Product");
-const { protect, optionalAuth } = require("../middleware/authMiddleware");
+const { protect, optionalAuth } = require("../middleware/authmiddleware");
 const { get } = require("mongoose");
 
 const router = express.Router();
