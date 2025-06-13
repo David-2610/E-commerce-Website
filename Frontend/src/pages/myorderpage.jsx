@@ -1,132 +1,158 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-const Myorderpage = () => {
-	const [orders, setOrders] = useState([]);
-	const navigate = useNavigate();
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserOrders } from "../redux/slices/orderSlice";
+import { FaBoxOpen } from "react-icons/fa"; // Added for empty state
 
-	useEffect(() => {
-		setTimeout(() => {
-			const mockorders = [
-				{
-					_id: "13453",
-					createdAt: new Date(),
-					ShippingAddress: { city: "cairo", country: "egypt" },
-					orderItems: [
-						{
-							name: "item1",
-							image: "http://picsum.photos/500/500?random=1",
-						},
-					],
-					totalprice: 100,
-					ispaid: true,
-				},
-				{
-					_id: "24335",
-					createdAt: new Date(),
-					ShippingAddress: { city: "cairo", country: "egypt" },
-					orderItems: [
-						{
-							name: "item2",
-							image: "http://picsum.photos/500/500?random=2",
-						},
-					],
-					totalprice: 200,
-					ispaid: false,
-				},
-			];
-			setOrders(mockorders);
-		}, 1000);
-	}, []);
+const Myorderpage = () => {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+    const { orders, loading, error } = useSelector((state) => state.orders);
+
+    useEffect(() => {
+        dispatch(fetchUserOrders());
+    }, [dispatch]);
+
+
 	
 	const handleRowClick = (orderId) => {
 		navigate(`/order/${orderId}`);
 	};
-	return (
-		<div className="max-w-7xl mx-auto p-4 sm:p-6">
-			<h2 className="text-xl sm:text-2xl font-bold mb-6">My Orders</h2>
-			<div className="relative shadow-md sm:rounded-lg overflow-hidden">
-				<table className="min-w-full text-left text-gray-500">
-					<thead className="bg-gray-100 text-xs uppercase text-gray-700">
-						<tr>
-							<th className="py-2 px-4 sm:py-3">Image</th>
-							<th className="py-2 px-4 sm:py-3">Order ID</th>
-							<th className="py-2 px-4 sm:py-3">Created</th>
-							<th className="py-2 px-4 sm:py-3">
-								Shipping Adderss
-							</th>
-							<th className="py-2 px-4 sm:py-3">Items</th>
-							<th className="py-2 px-4 sm:py-3">Price</th>
-							<th className="py-2 px-4 sm:py-3">Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						{orders.length > 0 ? (
-							orders.map((order) => (
-								<tr
-									key={order._id}
-									onClick={() => handleRowClick(order._id)}
-									className="border-b hover:border-gray-50 cursor-pointer "
-								>
-									<td className="py-2 px-4 sm:py-4 sm:px-4">
-										<img
-											src={order.orderItems[0].image}
-											alt={order.orderItems[0].name}
-											className="w-10 h-10 object-cover sm:w-12 sm:h-12 rounded-lg"
-										/>
-									</td>
+	
+    if (loading) {
+        return (
+            <div className="max-w-7xl mx-auto p-4 sm:p-6">
+                <div className="flex justify-center items-center h-64">
+                    <p className="text-lg">Loading your orders...</p>
+                </div>
+            </div>
+        );
+    }
 
-									<td
-										className="py-2 px-2 sm:py-4 sm:px-4 font-medium text-gray-900
-                                    whitespace-nowrap"
-									>
-										#{order._id}
-									</td>
-									<td className="py-2 px-2 sm:py-4 sm:px-4">
-										{order.createdAt.toLocaleDateString()}{" "}
-										{order.createdAt.toLocaleTimeString()}
-									</td>
-									<td className="py-2 px-2 sm:py-4 sm:px-4">
-										{order.ShippingAddress
-											? `${order.ShippingAddress.city}, ${order.ShippingAddress.country}`
-											: "N/A"}
-									</td>
-									<td className="py-2 px-2 sm:py-4 sm:px-4">
-										{order.orderItems.map((item) => (
-											<div key={item.name}>
-												{item.name}
-											</div>
-										))}
-									</td>
-									<td className="py-2 px-2 sm:py-4 sm:px-4 font-medium text-gray-900">
-										{order.totalprice}
-									</td>
-									<td className="py-2 px-2 sm:py-4 sm:px-4">
-										<span
-											className={`${
-												order.ispaid
-													? " bg-green-100 text-green-700"
-													: "bg-red-100 text-red-700"
-											} px-2 py-1 rounded-full text-xs sm:text-sm  font-medium `}
-										>
-											{order.ispaid ? "Paid" : "Pending"}
-										</span>
-									</td>
-								</tr>
-							))
-						) : (
-							<tr>
-								<td
-									colSpan={7}
-									className="py-4 px-4  text-center text-gray-500"
-								>
-									No orders found
-								</td>
-							</tr>
-						)}
-					</tbody>
-				</table>
-			</div>
-		</div>
+    if (error) {
+        return (
+            <div className="max-w-7xl mx-auto p-4 sm:p-6">
+                <div className="bg-red-100 text-red-700 p-4 rounded-lg">
+                    <p className="font-medium">Error loading orders:</p>
+                    <p>{error}</p>
+                </div>
+            </div>
+        );
+    }
+
+	return (
+        <div className="max-w-7xl mx-auto p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6">My Orders</h2>
+            
+            {orders.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <FaBoxOpen className="text-5xl text-gray-400 mb-4" />
+                    <h3 className="text-xl font-medium mb-2">No orders found</h3>
+                    <p className="text-gray-600 mb-6">
+                        You haven't placed any orders yet
+                    </p>
+                    <button 
+                        onClick={() => navigate('/')}
+                        className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition"
+                    >
+                        Continue Shopping
+                    </button>
+                </div>
+            ) : (
+                <div className="relative shadow-md sm:rounded-lg overflow-x-auto">
+                    <table className="min-w-full text-left text-gray-500">
+                        <thead className="bg-gray-100 text-sm uppercase text-gray-800">
+                            <tr>
+                                <th className="py-3 px-4">Image</th>
+                                <th className="py-3 px-4">Order ID</th>
+                                <th className="py-3 px-4">Date</th>
+                                <th className="py-3 px-4">Shipping</th>
+                                <th className="py-3 px-4">Items</th>
+                                <th className="py-3 px-4">Price</th>
+                                <th className="py-3 px-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders.map((order) => {
+                                // Safely get first item
+                                const firstItem = order.orderItems?.[0];
+                                
+                                return (
+                                    <tr 
+                                        key={order._id} 
+                                        onClick={() => handleRowClick(order._id)}
+                                        className="border-b hover:bg-gray-50 cursor-pointer"
+                                    >
+                                        {/* Image with null check */}
+                                        <td className="py-4 px-4">
+                                            {firstItem?.image ? (
+                                                <img 
+                                                    src={firstItem.image} 
+                                                    alt={firstItem.name || 'Order item'} 
+                                                    className="w-12 h-12 object-cover rounded-lg" 
+                                                />
+                                            ) : (
+                                                <div className="bg-gray-200 border-2 border-dashed rounded-lg w-12 h-12 flex items-center justify-center">
+                                                    <span className="text-xs text-gray-500">No image</span>
+                                                </div>
+                                            )}
+                                        </td>
+                                        
+                                        {/* Order ID */}
+                                        <td className="py-4 px-4 font-medium text-gray-900">
+                                            #{order._id.substring(0, 8)}...
+                                        </td>
+                                        
+                                        {/* Date */}
+                                        <td className="py-4 px-4">
+                                            {order.createdAt ? (
+                                                <>
+                                                    {new Date(order.createdAt).toLocaleDateString()}
+                                                    <br />
+                                                    <span className="text-xs text-gray-500">
+                                                        {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                </>
+                                            ) : 'N/A'}
+                                        </td>
+                                        
+                                        {/* Shipping Address */}
+                                        <td className="py-4 px-4">
+                                            {order.shippingAddress ? (
+                                                <div className="text-sm">
+                                                    {order.shippingAddress.city}, {order.shippingAddress.country}
+                                                </div>
+                                            ) : "Not provided"}
+                                        </td>
+                                        
+                                        {/* Item Count */}
+                                        <td className="py-4 px-4">
+                                            {order.orderItems?.length || 0}
+                                        </td>
+                                        
+                                        {/* Price */}
+                                        <td className="py-4 px-4 font-medium">
+                                            ${order.totalPrice?.toFixed(2) || '0.00'}
+                                        </td>
+                                        
+                                        {/* Status */}
+                                        <td className="py-4 px-4">
+                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                                order.isPaid 
+                                                    ? "bg-green-100 text-green-800" 
+                                                    : "bg-yellow-100 text-yellow-800"
+                                            }`}>
+                                                {order.isPaid ? "Paid" : "Pending"}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
 	);
 };
 

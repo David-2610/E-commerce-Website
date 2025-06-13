@@ -86,7 +86,7 @@ function ProductDetails({productId}) {
                     {/* Left thumbnails */}
                     <div className="hidden md:flex flex-col space-y-4 mr-6">
                         {selectedProduct.images.map((image, index) => (
-                            <img onClick={()=>setMainImage(image.url)} key={index} src={image.url} alt={image.altText || 'Thumbnail ${index}'} 
+                            <img onClick={()=>setMainImage(image.url)} key={index} src={image.url} alt={image.altText || `Thumbnail ${index}`} 
                             className={`w-20 h-20 object-cover rounded-lg cursor-pointer border ${mainImage === image.url? "border-black" : "border-gray-600"}`} />
                         ))}
                     </div>
@@ -114,7 +114,7 @@ function ProductDetails({productId}) {
                     {/* Mobile Thumbnails */}
                     <div className="md:hidden flex overscroll-x-scroll space-x-4 mb-4">
                         {selectedProduct.images.map((image, index) => (
-                            <img key={index} src={image.url} alt={image.altText || 'Thumbnail ${index}'} onClick={()=>setMainImage(image.url)} className={`w-20 h-20 object-cover rounded-lg cursor-pointer border ${mainImage === image.url? "border-black" : "border-gray-600"}`} />
+                            <img key={index} src={image.url} alt={image.altText || `Thumbnail ${index}`} onClick={()=>setMainImage(image.url)} className={`w-20 h-20 object-cover rounded-lg cursor-pointer border ${mainImage === image.url? "border-black" : "border-gray-600"}`} />
                         ))}
                     </div>
                     {/* Right side */}

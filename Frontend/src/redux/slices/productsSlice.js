@@ -50,7 +50,7 @@ export const fetchProductDetails = createAsyncThunk(
     const response = await axios.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`
     );
-   
+
 
     return response.data;
   }
@@ -75,6 +75,28 @@ export const updateProduct = createAsyncThunk(
     return response.data;
   }
 );
+//add new product
+// async thunk for creating a new product
+export const createProduct = createAsyncThunk(
+  "products/createProduct",
+  async (productData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/addproduct`,
+        productData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Product creation failed");
+    }
+  }
+);
+
 
 // async thunk to fetch the similar products by collection
 
@@ -160,6 +182,20 @@ const productsSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+      // handle product creation
+      .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products.push(action.payload); // Add the newly created product to the state
+      })
+      .addCase(createProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      })
+
       // handling the updating products
 
       .addCase(updateProduct.pending, (state) => {

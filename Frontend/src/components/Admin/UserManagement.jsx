@@ -1,189 +1,206 @@
-import React, { useState } from "react";
-const UserManagement = () => {
-	const users = [
-		{
-			_id: 252001,
-			name: "Alice Smith",
-			email: "alice@example.com",
-			role: "Admin",
-		},
-		{
-			_id: 252002,
-			name: "Bob Johnson",
-			email: "bob@example.com",
-			role: "Customer",
-		},
-		{
-			_id: 252003,
-			name: "Charlie Brown",
-			email: "charlie@example.com",
-			role: "Customer",
-		},
-		{
-			_id: 252004,
-			name: "David Lee",
-			email: "david@example.com",
-			role: "Admin",
-		},
-		{
-			_id: 252005,
-			name: "Eve Wang",
-			email: "eve@example.com",
-			role: "Customer",
-		},
-	];
-	const [formdata, setFormData] = useState({
+import { useEffect } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+	addUser,
+	deleteUser,
+	fetchUsers,
+	updateUser,
+} from "../../redux/slices/adminSlice";
+
+function UserManagement() {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const { user } = useSelector((state) => state.auth);
+	const { users, loading, error } = useSelector((state) => state.admin);
+
+	useEffect(() => {
+		if (user && user.role === "admin") {
+			dispatch(fetchUsers()); // Fetch users on component mount
+		} else {
+			navigate("/");
+		}
+	}, [dispatch, user, navigate]);
+
+	const [formData, setFormData] = useState({
 		name: "",
 		email: "",
 		password: "",
-		role: "Customer",
+		role: "customer",
 	});
+
 	const handleChange = (e) => {
 		setFormData({
-			...formdata,
+			...formData,
 			[e.target.name]: e.target.value,
 		});
 	};
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		console.log(formdata);
-		setFormData({
-			name: "",
-			email: "",
-			password: "",
-			role: "Customer",
-		});
-	};
-	const handleRoleChange = (userId, newRole) => {
-		console.log(`Changing role for user ${userId} to ${newRole}`);
 
-		// Here you would typically make an API call to update the user's role
-	};
-	const handleDeleteUser = (userId) => {
-		if (window.confirm("Are you sure you want to delete this user?")) {
-			console.log("Delete User with UserId:", userId);
+	const handleFormSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			await dispatch(addUser(formData)).unwrap();
+	
+			// Reset form only on success
+			setFormData({
+				name: "",
+				email: "",
+				password: "",
+				role: "customer",
+			});
+	
+			// Fetch updated users list instead of reloading the page
+			dispatch(fetchUsers());
+		} catch (error) {
+			console.error("Failed to add user:", error);
 		}
 	};
+	
+
+	const handleRoleChange = (userId, newRole) => {
+		dispatch(updateUser({ id: userId, role: newRole }));
+	};
+
+	const handleDeleteUser = async (userId) => {
+		if (window.confirm("Are your sure you want to delete this user?")) {
+			try {
+				await dispatch(deleteUser(userId)).unwrap();
+				dispatch(fetchUsers());
+			} catch (err) {
+				console.error("Failed to delete user:", err);
+			}
+		}
+	};
+	
+
 	return (
-		<div className="mx-auto p-6 max-w-7xl">
+		<div className="max-w-7xl mx-auto p-6">
 			<h2 className="text-2xl font-bold mb-4">User Management</h2>
-			<div className=" p-6 rounded-lg mb-6">
+			{loading && <p>Loading...</p>}
+			{error && <p>Error: {error}</p>}
+			{/* Add new user form */}
+			<div className="p-6 rounded-lg mb-6">
 				<h3 className="text-lg font-bold mb-4">Add New User</h3>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleFormSubmit}>
 					<div className="mb-4">
-						<label className="block text-gray-700 ">Name</label>
+						<label className="block text-gray-700">Name</label>
 						<input
 							type="text"
 							name="name"
-							value={formdata.name}
+							value={formData.name}
 							onChange={handleChange}
-							className="w-full p-2 border rounded"
+							className="w-full p-2 border rounded mt-2"
 							required
 						/>
 					</div>
-					{/* ------------------------------------------------------------------------ */}
 					<div className="mb-4">
-						<label className="block text-gray-700 ">Email</label>
+						<label className="block text-gray-700">Email</label>
 						<input
-							type="text"
+							type="email"
 							name="email"
-							value={formdata.email}
+							value={formData.email}
 							onChange={handleChange}
-							className="w-full p-2 border rounded"
+							className="w-full p-2 border rounded mt-2"
 							required
 						/>
 					</div>
-					{/* ------------------------------------------------------------------------ */}
 					<div className="mb-4">
-						<label className="block text-gray-700 ">Password</label>
+						<label className="block text-gray-700">Password</label>
 						<input
 							type="password"
 							name="password"
-							value={formdata.password}
+							value={formData.password}
 							onChange={handleChange}
-							className="w-full p-2 border rounded"
+							className="w-full p-2 border rounded mt-2"
 							required
 						/>
 					</div>
-					{/* ------------------------------------------------------------------------ */}
 					<div className="mb-4">
-						<label className="block text-gray-700 ">Role</label>
+						<label className="block text-gray-700">Role</label>
 						<select
 							name="role"
-							value={formdata.role}
+							value={formData.role}
 							onChange={handleChange}
-							className="w-full p-2 border rounded"
-							required
+							className="w-full p-2 border rounded mt-2"
 						>
-							<option value="Customer">Customer</option>
-							<option value="Admin">Admin</option>
+							<option value="customer">Customer</option>
+							<option value="admin">Admin</option>
 						</select>
 					</div>
-					{/* ------------------------------------------------------------------------ */}
+
 					<button
 						type="submit"
-						className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+						className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-lg"
 					>
 						Add User
 					</button>
-					{/* ------------------------------------------------------------------------ */}
 				</form>
 			</div>
-			{/* USer LIST */}
-			<div className="overflow-x-auto shadow-md sm:rounded-lg">
-				<table className="min-w-full text-left text-gray-500">
-					<thead className="bg-gray-500 text-sm uppercase text-gray-700">
+			{/* User List Management */}
+
+			<div className="overflow-x-auto shadow=md sm:rounded-lg">
+				<table className="min-w-full text-left text=gray-500">
+					<thead className="bg-gray-300 text-sm uppercase text-black">
 						<tr>
-							<th className="px-4 py-3">Name</th>
-							<th className="px-4 py-3">Email</th>
-							<th className="px-4 py-3">Role</th>
-							<th className="px-4 py-3">Actions</th>
+							<th className="py-3 px-2">Name</th>
+							<th className="py-3 px-2">Email</th>
+							<th className="py-3 px-2">Role</th>
+							<th className="py-3 px-2">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						{users.map((user, index) => (
-							<tr
-								key={user._id}
-								className="border-b hover:bg-gray-50"
-							>
-								<td className="p-4 font-medium text-gray-900 whitespace-nowrap">
-									{user.name}
-								</td>
-								<td className="p-4">{user.email}</td>
-								<td className="p-4">
-									<select
-										value={user.role}
-										onChange={(e) =>
-											handleRoleChange(
-												user._id,
-												e.target.value
-											)
-										}
-										className="p-2 border rounded"
-									>
-										<option value="Customer">
-											Customer
-										</option>
-										<option value="Admin">Admin</option>
-									</select>
-								</td>
-								<td className="p-4">
-									<button
-										className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
-										onClick={() =>
-											handleDeleteUser(user._id)
-										}
-									>
-										Delete
-									</button>
-								</td>
-							</tr>
-						))}
+						{(Array.isArray(users) ? users : [])
+							.filter(Boolean)
+							.map((user) => (
+								<tr
+									key={user._id}
+									className="border-b hover:bg-gray-100"
+								>
+									<td className="p-4 font-medium text-gray-900 whitespace-nowrap">
+										{user.name}
+									</td>
+									<td className="p-4">{user.email}</td>
+									<td className="p-4">
+										<select
+											value={user.role}
+											onChange={(e) =>
+												handleRoleChange(
+													user._id,
+													e.target.value
+												)
+											}
+											className="p-2 border rounded"
+										>
+											<option value="customer">
+												Customer
+											</option>
+											<option value="admin">Admin</option>
+										</select>
+									</td>
+									<td className="p-4">
+										<button
+											onClick={() =>
+												handleDeleteUser(user._id)
+											}
+											className="bg-red-500 text-white rounded w-full hover:bg-red-700 px-2 py-2"
+										>
+											Delete
+										</button>
+									</td>
+								</tr>
+							))}
 					</tbody>
 				</table>
 			</div>
+			<p className="mt-3 text-gray-700 text-sm">
+				Note: Please wait for few seconds and then refresh the page to
+				see the changes after you click on Update, Delete or Add User
+				button.
+			</p>
 		</div>
 	);
-};
+}
 
 export default UserManagement;

@@ -11,8 +11,7 @@ const Navbar = () => {
 	const [draweropen, SetcartDrawer] = useState(false);
 	const [navdraweropen, setNavdraweropen] = useState(false);
 	const cart = useSelector((state) => state.cart.cart);
-
-
+	const user = useSelector((state) => state.auth);
 	const cartItemCount =
 		cart?.products?.reduce(
 			(total, product) => total + product.quantity,
@@ -64,12 +63,14 @@ const Navbar = () => {
 				</div>
 				{/* right icons */}
 				<div className="flex items-center space-x-4">
-					<Link
-						to="/admin"
-						className=" block bg-black text-white px-4 py-0.5 text-sm rounded-md hover:bg-gray-700"
-					>
-						Admin
-					</Link>
+					{user?.user?.role === "admin" && (
+						<Link
+							to="admin"
+							className="block bg-black px-2 rounded text-sm text-white"
+						>
+							Admin
+						</Link>
+					)}
 					<Link to="/profile" className=" hover:text-black ">
 						<HiOutlineUser className="h-6 w-6 text-gray-700" />
 					</Link>

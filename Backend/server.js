@@ -3,14 +3,14 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./Config/DB");
 const userRoutes = require("./routes/userRoutes");
-const productRoutes = require("./Routes/productRoutes");
+const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const checkoutRoutes = require("./routes/checkoutRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const subscriberRoute = require("./routes/subscribeRoute");
 const adminRoutes = require("./routes/adminRoutes");
-const productAdminRoutes = require("./routes/productAdminRoutes");
+const ProductAdminRoutes = require("./routes/productAdminRoutes");
 const adminOrderRoutes = require("./routes/adminOrderRoutes");
 
 const app = express();
@@ -35,7 +35,7 @@ app.use("/api/checkout", checkoutRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api", subscriberRoute);
-app.use("/api/admin/products", productAdminRoutes);
+app.use("/api/admin/products", ProductAdminRoutes);
 app.use("/api/admin/orders", adminOrderRoutes);
 
 
