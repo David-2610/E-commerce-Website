@@ -2,7 +2,7 @@ const express = require("express");
 const Checkout = require("../models/Checkout");
 const Cart = require("../Models/Cart");
 const Product = require("../Models/Product");
-const Order = require("../models/Order");
+const Order = require("../Models/Order");
 const { protect } = require("../middleware/authmiddleware");
 const router = express.Router();
 
