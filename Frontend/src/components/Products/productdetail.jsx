@@ -7,6 +7,7 @@ import { addToCart } from "../../redux/slices/cartSlice";
 import { useParams } from "react-router-dom";
 
 function ProductDetails({productId}) {
+    console.log("ProductDetails component rendered with productId:", productId);
 
     const {id} = useParams();
     const productFetchId = productId || id;
