@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require('mongoose');
-const Product = require("../Models/Product");
-const {protect, admin} = require("../middleware/authmiddleware");
+const Product = require("../Models/Product.js");
+const {protect, admin} = require("../middleware/authmiddleware.js");
 
 // @route GET /api/admin/products
 // @desc Get all products (admin only) 

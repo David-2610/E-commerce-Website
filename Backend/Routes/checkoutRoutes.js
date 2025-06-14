@@ -1,9 +1,9 @@
 const express = require("express");
-const Checkout = require("../models/Checkout");
-const Cart = require("../Models/Cart");
-const Product = require("../Models/Product");
-const Order = require("../Models/Order");
-const { protect } = require("../middleware/authmiddleware");
+const Checkout = require("../models/Checkout.js");
+const Cart = require("../Models/Cart.js");
+const Product = require("../Models/Product.js");
+const Order = require("../Models/Order.js");
+const { protect } = require("../middleware/authmiddleware.js");
 const router = express.Router();
 
 // @route post /api/checkout
