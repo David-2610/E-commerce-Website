@@ -63,7 +63,7 @@ const Checkout = () => {
 				}
 			);
 			if (response.status === 200){
-				console.log("Payment successful:", response);
+			
 				await handleFinalizeCheckout(checkoutId);}
 			else {
 				console.error("Error while updating payment status");
