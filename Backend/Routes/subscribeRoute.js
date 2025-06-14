@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Subscriber = require('../models/Subscriber.js');
+const Subscriber = require('../Models/Subscriber.js');
 
 // @route POST /api/subscriber
 // @desc Subscribe a user to the newsletter
