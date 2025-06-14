@@ -89,7 +89,7 @@ function ProductDetails({productId}) {
     if (error) {
         return <p>Error: {error}</p>
     }
-	
+	console.log("similarProducts:", similarProducts);
 
     return ( 
         <div className="p-6">
