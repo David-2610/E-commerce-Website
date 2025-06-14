@@ -3,8 +3,9 @@ import Cartcontent from "../Cart/cartconetnt";
 import { fetchCart } from "../../redux/slices/cartSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { user, guestId } = useSelector((state) => state.auth);
 	const { cart } = useSelector((state) => state.cart);
@@ -20,14 +21,14 @@ const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
 	};
 	useEffect(() => {
 		if (userId || guestId) {
-			fetchCart({ userId, guestId });
+			dispatch(fetchCart({ userId, guestId }));
 		}
-	}, [userId, guestId]);
+	}, [dispatch, userId, guestId]);
 	
 	
 	return (
 		<div
-			className={`fixed top-0 right-0 w-3/4 sm:w1/2 md:w-[30rem] h-full bg-white shadow-lg transform transition-transform duration-300 flex flex-col z-50 ${
+			className={`fixed top-0 right-0 w-3/4 sm:w-1/2 md:w-[30rem] h-full bg-white shadow-lg transform transition-transform duration-300 flex flex-col z-50 ${
 				draweropen ? "translate-x-0" : "translate-x-full"
 			}`}
 		>
@@ -50,7 +51,7 @@ const Cartdrawer = ({ draweropen, togglecartDrawer }) => {
 				)}
 			</div>
 
-			<div className="p-4  bg-white stick bottom-0">
+			<div className="p-4  bg-white sticky bottom-0">
 				{cart && cart?.products?.length > 0 && (
 					<>
 						<button

@@ -9,11 +9,31 @@ const AdminHomePage = () => {
     const {products, loading: productsLoading, error: productsError} = useSelector((state) => state.adminProducts);
     const {orders, totalOrders, totalSales, loading: ordersLoading, error: ordersError} = useSelector((state)=> state.adminOrders);
 
-    useEffect(()=> {
-        dispatch(fetchAdminProducts());
-        dispatch(fetchAllOrders());
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const productsResult = await dispatch(fetchAdminProducts());
+                const ordersResult = await dispatch(fetchAllOrders());
+    
+                if (fetchAdminProducts.fulfilled.match(productsResult)) {
+                    console.log("Admin products fetched successfully.");
+                } else {
+                    console.error("Failed to fetch admin products:", productsResult.error);
+                }
+    
+                if (fetchAllOrders.fulfilled.match(ordersResult)) {
+                    console.log("All orders fetched successfully.");
+                } else {
+                    console.error("Failed to fetch orders:", ordersResult.error);
+                }
+            } catch (err) {
+                console.error("Unexpected error during admin data fetch:", err);
+            }
+        };
+    
+        fetchData();
     }, [dispatch]);
-
+    
 	return (
         <div className="max-w-7xl mx-auto p-6">
             <h1 className="text-3xl font-bold mb-6 pb-6 border-b">Admin Dashboard</h1>

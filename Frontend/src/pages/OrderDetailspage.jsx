@@ -10,9 +10,20 @@ const OrderDetailspage = () => {
 	const dispatch = useDispatch();
     const {orderDetails, loading, error} = useSelector((state)=> state.orders);
 
-    useEffect(()=> {
-        dispatch(fetchOrderDetails(id));
+    useEffect(() => {
+        const fetchOrder = async () => {
+            if (id) {
+                try {
+                    await dispatch(fetchOrderDetails(id));
+                } catch (error) {
+                    console.error("Failed to fetch order details:", error);
+                }
+            }
+        };
+    
+        fetchOrder();
     }, [dispatch, id]);
+    
 
     if (loading) {
         return <p>Loading...</p>

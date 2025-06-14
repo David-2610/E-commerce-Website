@@ -10,10 +10,22 @@ const Myorderpage = () => {
     const { orders, loading, error } = useSelector((state) => state.orders);
 
     useEffect(() => {
-        dispatch(fetchUserOrders());
+        const fetchOrders = async () => {
+            try {
+                const result = await dispatch(fetchUserOrders());
+                if (fetchUserOrders.fulfilled.match(result)) {
+                    console.log("Orders fetched successfully.");
+                } else {
+                    console.error("Failed to fetch orders:", result.error);
+                }
+            } catch (err) {
+                console.error("Unexpected error fetching orders:", err);
+            }
+        };
+    
+        fetchOrders();
     }, [dispatch]);
-
-
+    
 	
 	const handleRowClick = (orderId) => {
 		navigate(`/order/${orderId}`);

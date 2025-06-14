@@ -18,8 +18,23 @@ const CollectionPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchProductsByFilters({collection, ...queryParams}));
+        const fetchData = async () => {
+            try {
+                const result = await dispatch(fetchProductsByFilters({ collection, ...queryParams }));
+    
+                if (fetchProductsByFilters.fulfilled.match(result)) {
+                    console.log("Filtered products fetched successfully.");
+                } else {
+                    console.error("Failed to fetch filtered products:", result.error);
+                }
+            } catch (err) {
+                console.error("Unexpected error while fetching products by filters:", err);
+            }
+        };
+    
+        fetchData();
     }, [dispatch, collection, searchParams]);
+    
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
