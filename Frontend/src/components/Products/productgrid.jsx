@@ -4,14 +4,13 @@ import { Link } from "react-router-dom";
 const ProductGrid = ({ products = [], loading, error }) => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error: {error}</p>;
-	console.log("products:", products);
 	
 
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-			{products.map((product, index) => (
+			{products.map((product) => (
 				<Link
-					key={index}
+					key={product._id}
 					to={`/product/${product._id}`}
 					className="block"
 				>
