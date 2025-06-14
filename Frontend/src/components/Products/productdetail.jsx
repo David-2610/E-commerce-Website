@@ -10,8 +10,6 @@ import { addToCart } from "../../redux/slices/cartSlice";
 import { useParams } from "react-router-dom";
 
 function ProductDetails({ productId }) {
-	console.log("ProductDetails component rendered with productId:", productId);
-
 	const { id } = useParams();
 	const productFetchId = productId || id;
 	const dispatch = useDispatch();
@@ -102,7 +100,6 @@ function ProductDetails({ productId }) {
 	if (error) {
 		return <p>Error: {error}</p>;
 	}
-	console.log("similarProducts:", similarProducts);
 
 	return (
 		<div className="p-6">
