@@ -1,5 +1,5 @@
 const express = require("express");
-const Checkout = require("../models/Checkout.js");
+const Checkout = require("../Models/Checkout.js");
 const Cart = require("../Models/Cart.js");
 const Product = require("../Models/Product.js");
 const Order = require("../Models/Order.js");
