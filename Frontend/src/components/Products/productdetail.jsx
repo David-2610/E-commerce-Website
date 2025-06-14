@@ -20,28 +20,27 @@ function ProductDetails({productId}) {
     const [quantity, setQuantity] = useState(1);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     
-
     useEffect(() => {
-        if (productFetchId) {
-          const fetchData = async () => {
-            try {
-              const result = await dispatch(fetchProductDetails(productFetchId));
-      
-              // Check if the fetch was successful before proceeding
-              if (fetchProductDetails.fulfilled.match(result)) {
-                dispatch(fetchSimilarProducts({ id: productFetchId }));
-              } else {
-                console.warn("Product fetch failed, not fetching similar products");
-              }
-            } catch (error) {
-              console.error("Error fetching product or similar items:", error);
+      if (productFetchId) {
+        const fetchSequentially = async () => {
+          try {
+            const result = await dispatch(fetchProductDetails(productFetchId));
+    
+            // Check if the product fetch was successful
+            if (fetchProductDetails.fulfilled.match(result)) {
+              await dispatch(fetchSimilarProducts({ id: productFetchId }));
+            } else {
+              console.warn("Failed to fetch product details, skipping similar products.");
             }
-          };
-      
-          fetchData(); // Call the async function
-        }
-      }, [dispatch, productFetchId]);
-      
+          } catch (error) {
+            console.error("Unexpected error while fetching product and similar products:", error);
+          }
+        };
+    
+        fetchSequentially();
+      }
+    }, [dispatch, productFetchId]);
+    
       
     useEffect (() => {
         if (selectedProduct?.images?.length > 0) {
