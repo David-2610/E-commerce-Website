@@ -24,18 +24,25 @@ function ProductDetails({productId}) {
     useEffect(() => {
         if (productFetchId) {
           const fetchData = async () => {
-            // First: Wait for product details to load
-            await dispatch(fetchProductDetails(productFetchId));
+            try {
+              const result = await dispatch(fetchProductDetails(productFetchId));
       
-            // Then: Fetch similar products
-            dispatch(fetchSimilarProducts({ id: productFetchId }));
+              // Check if the fetch was successful before proceeding
+              if (fetchProductDetails.fulfilled.match(result)) {
+                dispatch(fetchSimilarProducts({ id: productFetchId }));
+              } else {
+                console.warn("Product fetch failed, not fetching similar products");
+              }
+            } catch (error) {
+              console.error("Error fetching product or similar items:", error);
+            }
           };
       
-          fetchData(); // call the async function
+          fetchData(); // Call the async function
         }
       }, [dispatch, productFetchId]);
       
-
+      
     useEffect (() => {
         if (selectedProduct?.images?.length > 0) {
             setMainImage(selectedProduct.images[0].url);
