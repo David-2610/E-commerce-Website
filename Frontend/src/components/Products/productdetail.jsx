@@ -21,14 +21,20 @@ function ProductDetails({productId}) {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     
 
-	useEffect(() => {
-		if (productFetchId) {
-
-			dispatch(fetchProductDetails(productFetchId));
-			dispatch(fetchSimilarProducts({ id: productFetchId })); 
-		}
-	}, [dispatch, productFetchId]);
-	
+    useEffect(() => {
+        if (productFetchId) {
+          const fetchData = async () => {
+            // First: Wait for product details to load
+            await dispatch(fetchProductDetails(productFetchId));
+      
+            // Then: Fetch similar products
+            dispatch(fetchSimilarProducts({ id: productFetchId }));
+          };
+      
+          fetchData(); // call the async function
+        }
+      }, [dispatch, productFetchId]);
+      
 
     useEffect (() => {
         if (selectedProduct?.images?.length > 0) {
