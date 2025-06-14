@@ -28,7 +28,7 @@ function OrderManagement() {
 			console.error("Failed to update status", err);
 		}
 	};
-	;
+	
 
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error: {error}</p>
